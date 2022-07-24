@@ -22,6 +22,18 @@ const Booking = new Schema({
     ],
     required: true,
   },
+  day: {
+    type: String,
+    enum: [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ],
+  },
   booking_date: {
     type: Number,
     default: Date.now(),
@@ -49,8 +61,8 @@ const Booking = new Schema({
     origin_code: { type: String, default: '' },
     destination: { type: String, default: '' },
     destination_code: { type: String, default: '' },
-    departureDate: { type: Number, default: null },
-    arrivalDate: { type: Number, default: null },
+    departureTime: { type: String, default: null },
+    arrivalTime: { type: String, default: null },
   },
   // only one seat will reserve on one booking
   reserve_seats: {

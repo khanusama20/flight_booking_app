@@ -13,6 +13,8 @@ async function pullAvailableSeats(origin, destination, departureDate) {
                 'flight_detail.origin_code': origin,
                 'flight_detail.destination_code': destination,
               },
+              { booking_status: 'confirmed' },
+              { booking_status: 'hold' },
             ],
           },
         },
