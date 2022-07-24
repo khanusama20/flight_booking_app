@@ -5,6 +5,9 @@ const path = require('path');
 // connection
 const DBConnection = require('./config/dbConnection');
 const appRouteMaster = require('./routes/master.routes');
+const {
+  decodeJWTTokenMiddleware,
+} = require('./middlewares/decodeJWT.middleware');
 
 // initialize express app
 const app = express();
@@ -43,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 const [secureRoutes, authRoutes] = appRouteMaster;
-app.use('/api/secure', secureRoutes);
+app.use('/api/secure', decodeJWTTokenMiddleware, secureRoutes);
 app.use('/api/auth', authRoutes);
 
 module.exports = app;
