@@ -1,9 +1,15 @@
 const FlightSchema = require('../../../models/flight.model');
 const BookingSchema = require('../model/booking.model');
+
 const {
-  sendResponse,
-  randomId,
+  pullAvailableSeats,
+  pullAvailableFlights
+} = require('../queries/pullAvailableFlights');
+
+const {
+  sendResponse
 } = require('../../../utilities/utils');
+
 const {
   INFO,
   ERROR,
@@ -21,102 +27,18 @@ async function checkAvailability(req, res) {
 
     const departureDate = new Date(dateOfJourney).setHours(0, 0, 0, 0);
 
-    let result = await BookingSchema
-      .aggregate([
-        {
-          $match: {
-            $and: [
-              { journey_date: departureDate },
-              {
-                "flight_detail.origin_code": origin,
-                "flight_detail.destination_code": destination
-              }
-            ]
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            totalReserved: {
-              $sum: "$reserve_seats"
-            }
-          }
-        }
-      ]);
+    let result = await pullAvailableSeats(origin, destination, departureDate)
+    console.log("Available Seats in flight ", result);
 
-    console.log(result)
     if (result.length === 0) {
       // 64 not found
-      sendResponse(
-        req,
-        res,
-        200,
-        64,
-        null,
-        "Booking Full",
-        INFO,
-      );
+      sendResponse(req, res, 200, 64, null, "Booking Full", INFO);
       return;
     }
 
-    let availableFlightsResult = await FlightSchema
-      .aggregate([
-        {
-          $match: {
-            flights: {
-              $elemMatch: {
-                origin_code: "BOM",
-                destination_code: "DEL"
-              }
-        
-            }
-          }
-        },
-        {
-          $unwind: "$flights"
-        },
-        {
-          $match: {
-            $and: [{
-                "flights.origin_code": "BOM"
-              },
-              {
-                "flights.destination_code": "DEL"
-              }
-            ]
-          }
-        },
-        {
-          $group: {
-            _id: {
-              "airline": "$airline",
-              "duration": "$duration",
-              "plane": "$plane",
-              "total_fare": "$total_fare",
-              "booking_hold_fare": "$booking_hold_fare",
-              "minimum_booking_hours": "$minimum_booking_hours",
-              "flight_type": "$flight_type",
-              "currency": "$currency",
-              "running_days": "$running_days",
-              "capacity": "$capacity"
-            },
-            flights: {
-              $push: "$flights"
-            }
-          }
-        }
-      ]);
-
+    let availableFlightsResult = await pullAvailableFlights(req.query);
     if (availableFlightsResult.length === 0) {
-      sendResponse(
-        req,
-        res,
-        200,
-        64,
-        null,
-        "Booking Full",
-        INFO,
-      );
+      sendResponse(req, res, 200, 64, null, "Booking Full", INFO);
       return;
     }
 
@@ -130,26 +52,10 @@ async function checkAvailability(req, res) {
     } =  availableFlightsResult[0]._id;
 
     availableFlightsResult[0]._id.available_seats = capacity - result[0].totalReserved;
-    sendResponse(
-      req,
-      res,
-      200,
-      -1,
-      availableFlightsResult,
-      "Booking Availabel",
-      SUCCESS,
-    );
+    sendResponse(req, res, 200, -1, availableFlightsResult, "Booking Available", SUCCESS);
   } catch (error) {
     console.log(error.message);
-    sendResponse(
-      req,
-      res,
-      500,
-      16,
-      null,
-      'Internal Server Error',
-      ERROR,
-    );
+    sendResponse(req, res, 200, 16, null, "Internal Server Error", ERROR);
   }
 }
 
