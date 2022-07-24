@@ -6,7 +6,9 @@ const authRoute = express.Router();
 const FlightBookingRouteMaster = require('../api/booking/index.routes');
 const UserRouteMaster = require('../api/user/index.routes');
 
-masterRoute.use('/flight', FlightBookingRouteMaster);
+const [secureRouteSet, AuthLessRouteSet] = FlightBookingRouteMaster;
+masterRoute.use('/flight', secureRouteSet);
+authRoute.use('/flight', AuthLessRouteSet);
 authRoute.use('/user', UserRouteMaster);
 
 module.exports = [
