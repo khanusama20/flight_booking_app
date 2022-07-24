@@ -13,6 +13,9 @@ const Flight = new Schema({
   flight_type: { type: String, default: null },
   currency: { type: String, default: null },
   running_days: { type: Number, default: null },
+  frequency: {
+    type: Array,
+  },
   flights: {
     type: Array,
     default: [],

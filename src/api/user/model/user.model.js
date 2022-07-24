@@ -50,6 +50,6 @@ const User = new Schema({
 
 User.methods.isValidPassword = async function (password) {
   return await compare(password, this.password);
-}
+};
 
 module.exports = model('user', User);

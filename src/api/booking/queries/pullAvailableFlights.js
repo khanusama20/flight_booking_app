@@ -77,6 +77,7 @@ async function pullAvailableFlights(obj) {
               currency: '$currency',
               running_days: '$running_days',
               capacity: '$capacity',
+              frequency: '$frequency',
             },
             flights: {
               $push: '$flights',
