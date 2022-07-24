@@ -22,13 +22,13 @@ function randomId(howMany = 10, key = 'abcdef0123456789') {
 
 function generateCalendar(from, tillDate, frequency = []) {
   const WEEK_NAME = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
   ];
 
   const schedule = [];
@@ -40,14 +40,14 @@ function generateCalendar(from, tillDate, frequency = []) {
   let incrementDate = fromDate;
   for (let i = 0; i < totalDays; i++) {
     if (incrementDate < endDate) {
-      incrementDate = incrementDate + ((60000 * 60) * 24); // one day
-      let date = new Date(incrementDate);
+      incrementDate += ((60000 * 60) * 24); // one day
+      const date = new Date(incrementDate);
 
       if (frequency.includes(WEEK_NAME[date.getDay()])) {
         schedule.push({
           day: WEEK_NAME[date.getDay()],
-          departureDate: `${(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`
-        })
+          departureDate: `${(date.getMonth() + 1)}/${date.getDate()}/${date.getFullYear()}`,
+        });
       }
     }
   }
