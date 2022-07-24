@@ -9,5 +9,6 @@ const controller = {
 };
 
 userAuthRoute.post('/sign-up', controller.userSignUp);
+userAuthRoute.post('/login', controller.login);
 
 module.exports = userAuthRoute;

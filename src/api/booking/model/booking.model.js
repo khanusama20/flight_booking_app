@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
-const Booking = Schema({
+const Booking = new Schema({
   bookingId: {
     type: String,
     required: true,

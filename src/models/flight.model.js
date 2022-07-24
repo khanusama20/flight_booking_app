@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
-const Flight = Schema({
+const Flight = new Schema({
   airline: { type: String, default: null },
   duration: { type: Number, default: null },
   capacity: { type: Number, default: 180 },

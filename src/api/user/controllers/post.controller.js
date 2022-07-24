@@ -64,6 +64,69 @@ async function userSignUp(req, res) {
   }
 }
 
+async function login(req, res) {
+  try {
+    console.log('/login: login');
+    const { username, pwd } = req.body;
+    const result = await UserSchema
+      .findOne({
+        $and: [
+          {
+            $or: [
+              { email: username },
+              { mobile_no: username },
+            ],
+          },
+        ],
+      });
+
+    if (!result) {
+      sendResponse(req, res, 401, 64, null, 'User not registered');
+      return;
+    }
+
+    const isMatch = await result.isValidPassword(pwd);
+    if (isMatch) {
+      // json-logger
+      const tokeData = {
+        userId: result._id.toString(),
+        gender: result.gender,
+        email: result.email,
+        birth_date: result.birth_date,
+        age: result.age,
+        token_time: Date.now(),
+      };
+
+      // { expiresIn: 120 } expire in 1 minuts for testing
+      const webToken = jwt.sign(
+        tokeData,
+        process.env.PRIVATE_KEY,
+        { expiresIn: process.env.TOKEN_EXP_TIME },
+      );
+
+      delete result._doc.salt;
+      delete result._doc.password;
+
+      sendResponse(
+        req,
+        res,
+        200,
+        -1,
+        [result, [{
+          jwt: webToken,
+        }]],
+        'Successfully logged in',
+      );
+    } else {
+      sendResponse(req, res, 406, 36, null, 'Invalid credentials. Please try again');
+    }
+  } catch (error) {
+    console.error(error);
+    sendResponse(req, res, 500, 16, null, 'Internal Server Error');
+  }
+}
+
 module.exports = {
   userSignUp,
+  login,
 };
