@@ -3,11 +3,11 @@ const BookingSchema = require('../model/booking.model');
 
 const {
   pullAvailableSeats,
-  pullAvailableFlights
+  pullAvailableFlights,
 } = require('../queries/pullAvailableFlights');
 
 const {
-  sendResponse
+  sendResponse,
 } = require('../../../utilities/utils');
 
 const {
@@ -22,43 +22,43 @@ async function checkAvailability(req, res) {
     const {
       origin,
       destination,
-      dateOfJourney
+      dateOfJourney,
     } = req.query;
 
     const departureDate = new Date(dateOfJourney).setHours(0, 0, 0, 0);
 
-    let result = await pullAvailableSeats(origin, destination, departureDate)
-    console.log("Available Seats in flight ", result);
+    const result = await pullAvailableSeats(origin, destination, departureDate);
+    console.log('Available Seats in flight ', result);
 
     if (result.length === 0) {
       // 64 not found
-      sendResponse(req, res, 200, 64, null, "Booking Full", INFO);
+      sendResponse(req, res, 200, 64, null, 'Booking Full', INFO);
       return;
     }
 
-    let availableFlightsResult = await pullAvailableFlights(req.query);
+    const availableFlightsResult = await pullAvailableFlights(req.query);
     if (availableFlightsResult.length === 0) {
-      sendResponse(req, res, 200, 64, null, "Booking Full", INFO);
+      sendResponse(req, res, 200, 64, null, 'Booking Full', INFO);
       return;
     }
 
-    availableFlightsResult[0].flights = availableFlightsResult[0].flights.map(item => {
-      item.departure_date = dateOfJourney
+    availableFlightsResult[0].flights = availableFlightsResult[0].flights.map((item) => {
+      item.departure_date = dateOfJourney;
       return item;
     });
 
     const {
-      capacity
-    } =  availableFlightsResult[0]._id;
+      capacity,
+    } = availableFlightsResult[0]._id;
 
     availableFlightsResult[0]._id.available_seats = capacity - result[0].totalReserved;
-    sendResponse(req, res, 200, -1, availableFlightsResult, "Booking Available", SUCCESS);
+    sendResponse(req, res, 200, -1, availableFlightsResult, 'Booking Available', SUCCESS);
   } catch (error) {
     console.log(error.message);
-    sendResponse(req, res, 200, 16, null, "Internal Server Error", ERROR);
+    sendResponse(req, res, 200, 16, null, 'Internal Server Error', ERROR);
   }
 }
 
 module.exports = {
-  checkAvailability
+  checkAvailability,
 };

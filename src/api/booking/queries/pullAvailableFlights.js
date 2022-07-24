@@ -3,36 +3,35 @@ const BookingSchema = require('../model/booking.model');
 
 async function pullAvailableSeats(origin, destination, departureDate) {
   try {
-    let result = await BookingSchema
+    const result = await BookingSchema
       .aggregate([
         {
           $match: {
             $and: [
               { journey_date: departureDate },
               {
-                "flight_detail.origin_code": origin,
-                "flight_detail.destination_code": destination
-              }
-            ]
+                'flight_detail.origin_code': origin,
+                'flight_detail.destination_code': destination,
+              },
+            ],
           },
         },
         {
           $group: {
             _id: null,
             totalReserved: {
-              $sum: "$reserve_seats"
-            }
-          }
-        }
+              $sum: '$reserve_seats',
+            },
+          },
+        },
       ]);
 
     return result;
-
   } catch (exception) {
     throw exception;
   }
 }
-async function pullAvailableFlights (obj) {
+async function pullAvailableFlights(obj) {
   try {
     const {
       origin,
@@ -46,53 +45,53 @@ async function pullAvailableFlights (obj) {
             flights: {
               $elemMatch: {
                 origin_code: origin,
-                destination_code: destination
-              }
-            }
-          }
+                destination_code: destination,
+              },
+            },
+          },
         },
         {
-          $unwind: "$flights"
+          $unwind: '$flights',
         },
         {
           $match: {
             $and: [{
-                "flights.origin_code": origin
-              },
-              {
-                "flights.destination_code": destination
-              }
-            ]
-          }
+              'flights.origin_code': origin,
+            },
+            {
+              'flights.destination_code': destination,
+            },
+            ],
+          },
         },
         {
           $group: {
             _id: {
-              "airline": "$airline",
-              "duration": "$duration",
-              "plane": "$plane",
-              "total_fare": "$total_fare",
-              "booking_hold_fare": "$booking_hold_fare",
-              "minimum_booking_hours": "$minimum_booking_hours",
-              "flight_type": "$flight_type",
-              "currency": "$currency",
-              "running_days": "$running_days",
-              "capacity": "$capacity"
+              airline: '$airline',
+              duration: '$duration',
+              plane: '$plane',
+              total_fare: '$total_fare',
+              booking_hold_fare: '$booking_hold_fare',
+              minimum_booking_hours: '$minimum_booking_hours',
+              flight_type: '$flight_type',
+              currency: '$currency',
+              running_days: '$running_days',
+              capacity: '$capacity',
             },
             flights: {
-              $push: "$flights"
-            }
-          }
-        }
+              $push: '$flights',
+            },
+          },
+        },
       ]);
 
-      return queryResult ?? [];
+    return queryResult ?? [];
   } catch (exception) {
-    throw exception
+    throw exception;
   }
 }
 
 module.exports = {
   pullAvailableSeats,
-  pullAvailableFlights
-}
+  pullAvailableFlights,
+};

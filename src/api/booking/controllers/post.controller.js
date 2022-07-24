@@ -18,7 +18,7 @@ async function reserveSeat(req, res) {
       bookingId: randomId(),
       place_of_origin: req.body.place_of_origin,
       booking_status: req.body.status,
-      journey_date: new Date(req.body.date_of_journey).setHours(0,0,0,0),
+      journey_date: new Date(req.body.date_of_journey).setHours(0, 0, 0, 0),
       flight_detail: {
         ...req.body.flight_detail,
         departureDate: new Date(req.body.flight_detail.departureDate).valueOf(),

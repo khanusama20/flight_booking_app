@@ -42,6 +42,8 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello Express!</h1>');
 });
 
-app.use('/api', appRouteMaster);
+const [secureRoutes, authRoutes] = appRouteMaster;
+app.use('/api/secure', secureRoutes);
+app.use('/api/auth', authRoutes);
 
 module.exports = app;
