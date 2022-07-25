@@ -46,6 +46,7 @@ function DBConnection() {
   const mongoOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   };
 
   if (process.env.NODE_ENV === 'production') {
