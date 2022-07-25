@@ -116,7 +116,7 @@ async function login(req, res) {
         res,
         200,
         -1,
-        [result, [{
+        [userDetails, [{
           jwt: webToken,
         }]],
         'Successfully logged in',
