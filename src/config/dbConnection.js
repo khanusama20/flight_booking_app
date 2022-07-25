@@ -45,7 +45,7 @@ function optionalServices() {
 function DBConnection() {
   const mongoOptions = {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   };
 
   if (process.env.NODE_ENV === 'production') {

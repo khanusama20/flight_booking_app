@@ -10,8 +10,8 @@ function autoCancelBooking() {
         return;
       }
 
-      if (result.length == 0) {
-        console.log("Not found hold booking");
+      if (result.length === 0) {
+        console.log('Not found hold booking');
         return;
       }
 
