@@ -1,3 +1,5 @@
+const { autoCancelBooking } = require('./cancel_booking');
+
 module.exports = {
-  ...require('./cancel_booking'),
+  autoCancelBooking,
 };

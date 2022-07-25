@@ -14,7 +14,7 @@ function sendResponse(req, res, statusCode, errCode, data, msgTxt, msgType) {
 
 function randomId(howMany = 10, key = 'abcdef0123456789') {
   let salt = '';
-  for (let x = 0; x < howMany; x++) {
+  for (let x = 0; x < howMany; x += 1) {
     salt += key.charAt(Math.floor(Math.random() * key.length));
   }
   return salt;
@@ -38,7 +38,7 @@ function generateCalendar(from, tillDate, frequency = []) {
   const totalDays = endDate.diff(fromDate, 'days');
 
   let incrementDate = fromDate;
-  for (let i = 0; i < totalDays; i++) {
+  for (let i = 0; i < totalDays; i += 1) {
     if (incrementDate < endDate) {
       incrementDate += ((60000 * 60) * 24); // one day
       const date = new Date(incrementDate);

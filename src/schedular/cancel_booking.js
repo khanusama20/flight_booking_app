@@ -20,9 +20,9 @@ function autoCancelBooking() {
         new: true,
         lean: true,
         projection: 'booking_status _id flight_detail',
-      }).exec((error, updatedResult) => {
-        if (error) {
-          console.error('Error occured while cancelling booking', error);
+      }).exec((updateError, updatedResult) => {
+        if (updateError) {
+          console.error('Error occured while cancelling booking', updateError);
           return;
         }
         console.log(updatedResult);
@@ -36,7 +36,7 @@ function autoCancelBooking() {
     }, {
       $addFields: {
         new_date: {
-          $add: ['$booking_date', (60000 * 20)],
+          $add: ['$booking_date', (60000 * 60) * 24],
         },
       },
     }, {

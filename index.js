@@ -4,7 +4,9 @@ const app = require('./src/app');
 
 const httpServer = http.createServer(app);
 
-httpServer.listen(process.env.PORT, process.env.HOST, () => {
+const PORT = process.env.PORT || 5000;
+
+httpServer.listen(PORT, process.env.HOST, () => {
   console.log('Server started successfully');
   console.log(`Server listening at port http://${process.env.HOST}:${process.env.PORT}/`);
 });

@@ -104,8 +104,12 @@ async function login(req, res) {
         { expiresIn: process.env.TOKEN_EXP_TIME },
       );
 
-      delete result._doc.salt;
-      delete result._doc.password;
+      const userDetails = {
+        ...result._doc,
+      };
+
+      delete userDetails.salt;
+      delete userDetails.password;
 
       sendResponse(
         req,

@@ -5,9 +5,7 @@ const {
   randomId,
 } = require('../../../utilities/utils');
 const {
-  INFO,
   ERROR,
-  WARNING,
   SUCCESS,
 } = require('../../../constants/messageType');
 
@@ -27,15 +25,15 @@ async function reserveSeat(req, res) {
     };
 
     console.log('Data modification before insert ', JSON.stringify(data));
-    const booking_result = await new BookingSchema(data).save();
-    // const booking_result = 'yes';
-    if (booking_result) {
+    const bookingRresult = await new BookingSchema(data).save();
+    // const bookingRresult = 'yes';
+    if (bookingRresult) {
       sendResponse(
         req,
         res,
         200,
         -1,
-        booking_result,
+        bookingRresult,
         'Congratulations! Your booking is confirmed successfully',
         SUCCESS,
       );

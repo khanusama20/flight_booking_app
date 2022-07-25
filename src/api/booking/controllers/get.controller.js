@@ -1,6 +1,3 @@
-const FlightSchema = require('../../../models/flight.model');
-const BookingSchema = require('../model/booking.model');
-
 const {
   pullAvailableSeats,
   pullAvailableFlights,
@@ -14,7 +11,6 @@ const {
 const {
   INFO,
   ERROR,
-  WARNING,
   SUCCESS,
 } = require('../../../constants/messageType');
 
@@ -64,10 +60,12 @@ async function checkAvailability(req, res) {
     availableFlightsResult[0]._id.available_seats = capacity - totalReserved;
     const timeTable = generateCalendar(dateFrom, tillDate, availableFlightsResult[0]._id.frequency)
       .map((obj) => {
-        obj.flights = availableFlightsResult[0].flights;
+        let { flights } = obj;
+        flights = availableFlightsResult[0].flights;
         return {
           ...obj,
           ...availableFlightsResult[0]._id,
+          flights,
         };
       });
 

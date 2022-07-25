@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { compare } = require('bcrypt');
+const { compareSync } = require('bcrypt');
 
 const { Schema, model } = mongoose;
 
@@ -48,8 +48,10 @@ const User = new Schema({
   },
 });
 
-User.methods.isValidPassword = async function (password) {
-  return await compare(password, this.password);
-};
+function isValidPassword(password) {
+  return compareSync(password, this.password);
+}
+
+User.methods.isValidPassword = isValidPassword;
 
 module.exports = model('user', User);
