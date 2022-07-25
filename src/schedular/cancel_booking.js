@@ -41,13 +41,13 @@ function autoCancelBooking() {
     }, {
       $addFields: {
         new_date: {
-          $add: ['$booking_date', (60000 * 60) * 24],
+          $add: ['$booking_date', (60000 * 60) * 3],
         },
       },
     }, {
       $match: {
         new_date: {
-          $gte: currentDate,
+          $lte: currentDate,
         },
       },
     }, {
