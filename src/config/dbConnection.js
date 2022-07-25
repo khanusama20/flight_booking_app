@@ -21,6 +21,10 @@ function optionalServices() {
     console.error('Connection is not established due to database error', err);
   });
 
+  mongoose.connection.on('connected', () => {
+    console.log('MongoDB connection is established successfully');
+  });
+
   // when nodemon reboots the app, capture the SIGUSR2 signal
   process.once('SIGUSR2', async () => {
     if (await peacefulShutdown('nodemon restart') === 1) {
@@ -41,18 +45,28 @@ function optionalServices() {
 function DBConnection() {
   const mongoOptions = {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   };
 
-  if (process.env.MONGO_DEV) {
+  if (process.env.NODE_ENV === 'production') {
+    if (process.env.MONGO_PROD) {
+      optionalServices();
+      mongoose
+        .connect(process.env.MONGO_PROD, mongoOptions, () => {
+          console.log('Waiting for database connection');
+        });
+    } else {
+      console.log('Please provide database URI address');
+    }
+  } else if (process.env.MONGO_DEV) {
     optionalServices();
     mongoose
       .connect(process.env.MONGO_DEV, mongoOptions, () => {
-        console.log('MongoDB connection is established successfully');
+        console.log('Waiting for database connection');
       });
   } else {
     console.log('Please provide database URI address');
   }
-
   mongoose.set('debug', (process.env.MONGOOSE_DEBUG === 'Yes'));
 }
 
